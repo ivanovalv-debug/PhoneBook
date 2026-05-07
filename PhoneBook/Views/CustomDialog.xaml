@@ -1,0 +1,138 @@
+﻿<Window x:Class="PhoneBook.Views.CustomDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Dialog" 
+        SizeToContent="WidthAndHeight" 
+        MaxWidth="450" 
+        MinWidth="300"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="HotPink"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False">
+
+    <!-- Белая карточка с тенью -->
+    <Border Background="White"
+            CornerRadius="20"
+            BorderThickness="0"
+            Margin="15">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="15" ShadowDepth="3" Opacity="0.2" Color="#000"/>
+        </Border.Effect>
+
+        <!-- Основной контент -->
+        <Grid Margin="30, 30, 30, 20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Заголовок -->
+                <RowDefinition Height="Auto"/>
+                <!-- Разделитель -->
+                <RowDefinition Height="*"/>
+                <!-- Текст (занимает все место) -->
+                <RowDefinition Height="Auto"/>
+                <!-- Кнопки -->
+            </Grid.RowDefinitions>
+
+            <!-- 1. Заголовок с иконкой -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Круглая иконка -->
+                <Border x:Name="IconBorder"
+                        Width="40" Height="40"
+                        CornerRadius="20"
+                        Background="DeepPink"
+                        VerticalAlignment="Center">
+                    <TextBlock x:Name="IconText"
+                               Text="!" 
+                               FontSize="20"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="Cornsilk"/>
+                </Border>
+
+                <!-- Текст заголовка -->
+                <TextBlock x:Name="TitleText"
+                           Grid.Column="1"
+                           Text="Заголовок"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="DeepPink"
+                           Margin="15,0,0,0"
+                           VerticalAlignment="Center"/>
+            </Grid>
+
+            <!-- 2. Тонкая линия-разделитель -->
+            <Rectangle Grid.Row="1"
+                       Height="1" 
+                       Fill="#EEE" 
+                       Margin="0,15,0,15"/>
+
+            <!-- 3. Основной текст сообщения -->
+            <!-- Важное: TextWrapping="Wrap" и LineHeight для красивого чтения -->
+            <TextBlock x:Name="MessageText"
+                       Grid.Row="2"
+                       Text="Сообщение"
+                       FontSize="15"
+                       Foreground="#333"
+                       TextWrapping="Wrap"
+                       LineHeight="22"
+                       Margin="0,0,0,20"/>
+
+            <!-- 4. Кнопки -->
+            <StackPanel Grid.Row="3"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="0,10,0,0">
+
+                <!-- Кнопка Отмена (скрыта по умолчанию) -->
+                <Button x:Name="CancelButton"
+                        Content="Отмена"
+                        Width="100" Height="36"
+                        Margin="0,0,12,0"
+                        Background="#FFE5E5" 
+                    Foreground="DeepPink"
+                        FontWeight="SemiBold"
+                        FontSize="13"
+                        BorderThickness="0"
+                        Cursor="Hand">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="10"
+                                    BorderBrush="DeepPink"
+                                    BorderThickness="1">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <!-- Кнопка ОК -->
+                <Button x:Name="OkButton"
+                        Content="ОК"
+                        Width="100" Height="36"
+                        Background="DeepPink"
+                        Foreground="Cornsilk"
+                        FontWeight="Bold"
+                        FontSize="13"
+                        BorderThickness="0"
+                        Cursor="Hand">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                                    CornerRadius="10">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

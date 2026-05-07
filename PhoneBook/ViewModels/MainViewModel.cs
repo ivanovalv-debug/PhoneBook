@@ -1,92 +1,153 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using PhoneBook.Models;
+using PhoneBook.Services;
 
 namespace PhoneBook.ViewModels
 {
     /// <summary>
     /// ViewModel приложения "Телефонная книга".
-    /// Посредник между View и Model.
+    /// Использует Dependency Injection для получения IDialogService.
+    /// Это устраняет жёсткую связность с UI и позволяет тестировать ViewModel.
     /// </summary>
     public class MainViewModel : ObservableObject
     {
-        // Коллекция контактов (автоматически обновляет UI при добавлении/удалении)
+        private readonly IDialogService _dialogService;
+
+        /// <summary>
+        /// Коллекция контактов для отображения в DataGrid.
+        /// ObservableCollection автоматически обновляет UI.
+        /// </summary>
         public ObservableCollection<Contact> Contacts { get; }
 
         private string _name = string.Empty;
         private string _phone = string.Empty;
         private Contact? _selectedContact;
 
-        // Свойство для привязки к полю ввода имени
+        /// <summary>
+        /// Свойство для привязки к полю ввода имени.
+        /// </summary>
         public string Name
         {
             get => _name;
             set => Set(ref _name, value);
         }
 
-        // Свойство для привязки к полю ввода телефона
+        /// <summary>
+        /// Свойство для привязки к полю ввода телефона.
+        /// </summary>
         public string Phone
         {
             get => _phone;
             set => Set(ref _phone, value);
         }
 
-        // Свойство для хранения выбранного в таблице контакта
+        /// <summary>
+        /// Выбранный в DataGrid контакт (для удаления).
+        /// </summary>
         public Contact? SelectedContact
         {
             get => _selectedContact;
             set => Set(ref _selectedContact, value);
         }
 
-        // Команда добавления (без параметра)
+        /// <summary>
+        /// Команда добавления контакта (без параметра).
+        /// </summary>
         public ICommand AddCommand { get; }
 
-        // Команда удаления (с параметром - принимаем объект контакта)
+        /// <summary>
+        /// Команда удаления контакта (с параметром).
+        /// </summary>
         public ICommand DeleteCommand { get; }
 
-        public MainViewModel()
+        /// <summary>
+        /// Constructor Injection: IoC-контейнер автоматически
+        /// передаёт реализацию IDialogService.
+        /// </summary>
+        public MainViewModel(IDialogService dialogService)
         {
+            _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             Contacts = new ObservableCollection<Contact>();
 
-            // Инициализация команд
             AddCommand = new RelayCommand(AddContact, CanAddContact);
-
-            // ИСПОЛЬЗУЕМ RelayCommand<object?> для передачи параметра (выбранного контакта)
             DeleteCommand = new RelayCommand<object?>(DeleteContact, CanDeleteContact);
         }
 
-        // Логика добавления
+        /// <summary>
+        /// Логика добавления нового контакта.
+        /// Проверяет дубликаты по номеру телефона.
+        /// </summary>
         private void AddContact()
         {
+            // Проверка на дубликат по номеру телефона
+            if (Contacts.Any(c => c.Phone == Phone.Trim()))
+            {
+                _dialogService.ShowWarning(
+                    "Контакт с таким номером телефона уже существует!",
+                    "Дубликат");
+                return;
+            }
+
+            // Валидация и создание контакта
             if (Contact.Validate(Name, Phone))
             {
-                Contacts.Add(new Contact(Name, Phone));
-                // Очистка полей после успешного добавления
+                var contact = new Contact(Name, Phone);
+                Contacts.Add(contact);
+
+                // Очистка полей ввода
                 Name = string.Empty;
                 Phone = string.Empty;
+
+                // Информационное сообщение об успехе
+                _dialogService.ShowInfo(
+                    $"Контакт \"{contact.Name}\" успешно добавлен!",
+                    "Добавление контакта");
+            }
+            else
+            {
+                _dialogService.ShowError(
+                    "Некорректные данные контакта. Проверьте имя и номер телефона.",
+                    "Ошибка валидации");
             }
         }
 
-        // Проверка доступности кнопки "Добавить"
+        /// <summary>
+        /// Проверка доступности команды добавления.
+        /// </summary>
         private bool CanAddContact()
         {
             return !string.IsNullOrWhiteSpace(Name) && !string.IsNullOrWhiteSpace(Phone);
         }
 
-        // Логика удаления (ПРИНИМАЕТ ПАРАМЕТР)
+        /// <summary>
+        /// Логика удаления контакта с подтверждением.
+        /// </summary>
         private void DeleteContact(object? parameter)
         {
-            // Приводим параметр к типу Contact
             if (parameter is Contact contact)
             {
-                Contacts.Remove(contact);
+                // Запрос подтверждения удаления
+                bool confirmed = _dialogService.ShowConfirmation(
+                    $"Вы действительно хотите удалить контакт \"{contact.Name}\"?",
+                    "Удаление контакта");
+
+                if (confirmed)
+                {
+                    Contacts.Remove(contact);
+                    _dialogService.ShowInfo(
+                        "Контакт успешно удалён.",
+                        "Удаление");
+                }
             }
         }
 
-        // Проверка доступности кнопки "Удалить"
+        /// <summary>
+        /// Проверка доступности команды удаления.
+        /// </summary>
         private bool CanDeleteContact(object? parameter)
         {
-            // Кнопка активна только если передан контакт (т.е. что-то выбрано в таблице)
             return parameter is Contact;
         }
     }

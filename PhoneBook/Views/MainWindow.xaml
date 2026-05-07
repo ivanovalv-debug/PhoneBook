@@ -6,9 +6,7 @@
         WindowStartupLocation="CenterScreen"
         Background="HotPink">
 
-    <Window.DataContext>
-        <vm:MainViewModel/>
-    </Window.DataContext>
+   
 
     
     <Window.Resources>

@@ -13,10 +13,7 @@ namespace PhoneBook
     {
         public MainWindow()
         {
-            InitializeComponent();
-
-            // Установка DataContext для привязки данных
-            DataContext = new MainViewModel();
+            InitializeComponent();      
         }
     }
 }
