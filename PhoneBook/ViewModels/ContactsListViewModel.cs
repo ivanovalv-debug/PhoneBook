@@ -11,7 +11,7 @@ namespace PhoneBook.ViewModels
     /// Использует Dependency Injection для получения IDialogService.
     /// Это устраняет жёсткую связность с UI и позволяет тестировать ViewModel.
     /// </summary>
-    public class MainViewModel : ObservableObject
+    public class ContactsListViewModel : ObservableObject
     {
         private readonly IDialogService _dialogService;
 
@@ -66,7 +66,7 @@ namespace PhoneBook.ViewModels
         /// Constructor Injection: IoC-контейнер автоматически
         /// передаёт реализацию IDialogService.
         /// </summary>
-        public MainViewModel(IDialogService dialogService)
+        public ContactsListViewModel(IDialogService dialogService)
         {
             _dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
             Contacts = new ObservableCollection<Contact>();

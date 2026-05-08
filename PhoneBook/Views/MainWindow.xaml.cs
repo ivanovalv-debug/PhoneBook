@@ -1,19 +1,17 @@
 ﻿using System.Windows;
-using PhoneBook.ViewModels;
 
-namespace PhoneBook
+namespace PhoneBook 
 {
     /// <summary>
-    /// VIEW (Представление) - главное окно приложения.
-    /// Отвечает только за отображение интерфейса.
-    /// Вся бизнес-логика находится в ViewModel.
-    /// В MVVM code-behind должен быть минимальным.
+    /// Главное окно-оболочка (Shell) приложения.
+    /// Содержит меню навигации и ContentControl для динамической подгрузки экранов.
     /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
-            InitializeComponent();      
+            InitializeComponent();
+            // DataContext устанавливается из DI-контейнера в App.xaml.cs
         }
     }
 }

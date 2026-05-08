@@ -5,40 +5,31 @@ using PhoneBook.ViewModels;
 
 namespace PhoneBook
 {
-    /// <summary>
-    /// Точка входа приложения.
-    /// Настраивает Dependency Injection контейнер.
-    /// </summary>
     public partial class App : Application
     {
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
-            // 1. Создаём коллекцию сервисов
             var services = new ServiceCollection();
 
-            // 2. Регистрируем сервисы
-            // DialogService — Singleton (один экземпляр на всё приложение)
             services.AddSingleton<IDialogService, DialogService>();
+            services.AddSingleton<INavigationService, NavigationService>();
 
-            // ViewModel — Transient (новый экземпляр при каждом запросе)
-            services.AddTransient<MainViewModel>();
+            // Экраны создаются заново при каждом переходе
+            services.AddTransient<ContactsListViewModel>();
+            services.AddTransient<AboutViewModel>();
 
-            // MainWindow — Singleton с явной установкой DataContext
+            // Shell живёт один раз
+            services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<MainWindow>(sp =>
             {
                 var window = new MainWindow();
-                window.DataContext = sp.GetRequiredService<MainViewModel>();
+                window.DataContext = sp.GetRequiredService<MainWindowViewModel>();
                 return window;
             });
 
-            // 3. Создаём IoC-контейнер
             var serviceProvider = services.BuildServiceProvider();
-
-            // 4. Получаем и показываем главное окно
-            var mainWindow = serviceProvider.GetRequiredService<MainWindow>();
-            mainWindow.Show();
+            serviceProvider.GetRequiredService<MainWindow>().Show();
         }
     }
 }
