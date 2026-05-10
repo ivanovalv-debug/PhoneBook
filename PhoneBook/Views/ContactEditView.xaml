@@ -1,0 +1,119 @@
+﻿<UserControl x:Class="PhoneBook.Views.ContactEditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <UserControl.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Foreground" Value="DeepPink"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border" 
+                                CornerRadius="10" 
+                                BorderBrush="HotPink" 
+                                BorderThickness="1" 
+                                Background="Pink" 
+                                SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                          Focusable="false" 
+                                          HorizontalScrollBarVisibility="Hidden" 
+                                          VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Foreground" Value="Cornsilk"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" 
+                                CornerRadius="10" 
+                                BorderBrush="DeepPink" 
+                                BorderThickness="1" 
+                                Background="{TemplateBinding Background}" 
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <!-- ScrollViewer для прокрутки если окно маленькое -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="20" Background="HotPink">
+            <Border Background="DeepPink" 
+                    CornerRadius="15" 
+                    Padding="25" 
+                    Margin="10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Заголовок -->
+                    <TextBlock Grid.Row="0"
+                               Text="Редактирование контакта" 
+                               FontSize="20" 
+                               FontWeight="Bold"
+                               Foreground="Cornsilk"
+                               Margin="0,0,0,20"
+                               HorizontalAlignment="Center"/>
+
+                    <!-- Поле имени -->
+                    <TextBlock Grid.Row="1"
+                               Text="Имя контакта:" 
+                               Foreground="Cornsilk"
+                               FontWeight="Bold"
+                               Margin="0,0,0,5"/>
+                    <TextBox Grid.Row="2"
+                             Text="{Binding EditName, UpdateSourceTrigger=PropertyChanged}" 
+                             Margin="0,0,0,15"/>
+
+                    <!-- Поле телефона -->
+                    <TextBlock Grid.Row="3"
+                               Text="Номер телефона:" 
+                               Foreground="Cornsilk"
+                               FontWeight="Bold"
+                               Margin="0,0,0,5"/>
+                    <TextBox Grid.Row="4"
+                             Text="{Binding EditPhone, UpdateSourceTrigger=PropertyChanged}" 
+                             Margin="0,0,0,25"/>
+
+                    <!-- Кнопки -->
+                    <StackPanel Grid.Row="5"
+                                Orientation="Horizontal" 
+                                HorizontalAlignment="Center"
+                                Margin="0,10,0,0">
+                        <Button Content="Сохранить" 
+                                Command="{Binding SaveCommand}"
+                                Width="120"
+                                Margin="0,0,15,0"
+                                Background="LightCoral"
+                                FontWeight="Bold"/>
+
+                        <Button Content="Отмена" 
+                                Command="{Binding CancelCommand}"
+                                Width="120"
+                                Background="Red"
+                                FontWeight="Bold"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

@@ -15,11 +15,13 @@ namespace PhoneBook
             services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<INavigationService, NavigationService>();
 
-            // Экраны создаются заново при каждом переходе
-            services.AddTransient<ContactsListViewModel>();
+            
+            services.AddSingleton<ContactsListViewModel>();
+
+            
+            services.AddTransient<ContactEditViewModel>();
             services.AddTransient<AboutViewModel>();
 
-            // Shell живёт один раз
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<MainWindow>(sp =>
             {

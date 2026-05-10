@@ -4,12 +4,15 @@
              xmlns:vm="clr-namespace:PhoneBook.ViewModels"
              xmlns:v="clr-namespace:PhoneBook.Views">
 
-    <!-- Нет StartupUri! -->
-
     <Application.Resources>
         <DataTemplate DataType="{x:Type vm:ContactsListViewModel}">
             <v:ContactsListView/>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vm:ContactEditViewModel}">
+            <v:ContactEditView/>
+        </DataTemplate>
+
         <DataTemplate DataType="{x:Type vm:AboutViewModel}">
             <v:AboutView/>
         </DataTemplate>
